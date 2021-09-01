@@ -1,2 +1,6 @@
 src/model/compartment/*.o
 src/model/compartment/*.exe
+src/model/algorithm/*.o
+src/model/algorithm/*.exe
+src/model/tracking/*.o
+src/model/tracking/*.exe

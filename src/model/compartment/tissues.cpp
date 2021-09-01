@@ -2,12 +2,12 @@
 Logic for controlling a set of all tissue compartments
 */
 
-#include <iostream>
 #include <vector>
 #include <algorithm>
 
 #include "tissues.hpp"
 #include "constants.hpp"
+#include "../algorithm/deco_algorithm.hpp"
 
 //******************************************
 // Inits all tissue compartments
@@ -18,7 +18,7 @@ Body::Tissues<cell>::Tissues(float GFLoIn, float GFHiIn,
         : GFHi(GFHiIn), GFLo(GFLoIn), gas(gas_mix) {
     int n;
     Constants constants;
-    cell tissue;
+    cell *tissue;
 
     //Create new objects in the heap
     for (n = 0; n < NUM_COMPARTMENTS; n++) {
@@ -29,47 +29,32 @@ Body::Tissues<cell>::Tissues(float GFLoIn, float GFHiIn,
                                             constants.BHe,
                                             constants.halfLifeN2,
                                             constants.halfLifeHe);
-        compartments.push_back(&tissue); 
+        compartments.push_back(tissue); 
     }
 }
 
 
 //******************************************
-// Waits all compartments
+// Gets gas mix in vector form
 //******************************************
 template<class cell>
-void Body::Tissues<cell>::wait(int time) {
-    //Simply go through all cells and make them wait at depth
-    for(int n = 0; n < NUM_COMPARTMENTS; n++) {
-        compartments[n]->wait(time);
-    }
+std::vector<int> Body::Tissues<cell>::get_gas_mix() {
+    std::vector<int> gas_mix(2);
+    gas_mix[0] = static_cast<int> (100 * (1 - gas[0] - gas[1]));
+    gas_mix[1] = static_cast<int> (100 * gas[1]);
+    return gas_mix;
 }
 
 
 //******************************************
-// Change depth
+// Dive segment for all tissues
 //******************************************
 template<class cell>
-void Body::Tissues<cell>::change_depth(int new_depth, int rate) {
-    int max_rate;
-
-    //Select maximum ascent rate
-    if (in_deco == true) {
-        max_rate = MAX_DECO_ASCENT_RATE; 
-    }
-    else {
-        max_rate = MAX_ASCENT_RATE; 
-    }
-
-    //Clamp depth change rate
-    rate = std::min(rate, max_rate);
-
-    //Simply go through all cells and change their depths
+void Body::Tissues<cell>::dive_segment(int time, int depth_rate){
     for (int n = 0; n < NUM_COMPARTMENTS; n++) {
-        compartments[n]->change_depth(new_depth, rate);
+        compartments->dive_segment(time, depth_rate);
     }
 }
-
 
 //******************************************
 // Set all cell pressures for repeat dives
@@ -87,6 +72,14 @@ void Body::Tissues<cell>::set_partial_pressures(
     }
 }
 
+
+//******************************************
+// Returns current depth of tissues
+//******************************************
+template<class cell>
+int Body::Tissues<cell>::get_depth() {
+    return static_cast<int> (PRES2DEPTH(pAmb));
+}
 
 //******************************************
 // Gets the real ceiling of the system
@@ -126,8 +119,16 @@ int Body::Tissues<cell>::get_next_stop() {
         stop_depth = ceiling - remainder + 3;
     }
 
-    return stop_depth;
+    return std::max(stop_depth, SHALLOWEST_STOP);
 }
 
+
+//******************************************
+// Sets the GF gradient
+//******************************************
+template<class cell>
+void Body::Tissues<cell>::set_GF_grad(float first_stop_depth) {
+    GF_grad = (GFHi - GFLo) / (1 - DEPTH2PRES(first_stop_depth));
+}
 
 
