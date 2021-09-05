@@ -1,0 +1,52 @@
+/*
+Header for the class for a single Buhlmann tissue compartment
+*/
+
+#ifndef MODEL_BUHL_H
+#define MODEL_BUHL_H
+
+#include "../types_constants/types.hpp"
+
+namespace DecoModel {
+    class Cell {
+        protected:
+            //Constants
+            const float kN2;
+            const float kHe;
+            const float AN2;
+            const float BN2;
+            const float AHe;
+            const float BHe;
+
+            //Tissue partial pressure
+            float pN2 = RESET_N2;
+            float pHe = RESET_HE;
+
+            //Deco status
+            static bool in_deco;
+            static bool at_first_stop;
+
+            //Sample time when decompressing
+            static const float dt;
+
+            //*****Methods*****
+            
+            //Dive segment - gas only
+            void dive_segment_buhl(int time, int start_depth, 
+                int depth_rate, std::vector<float> gas); //Gas {FN2, FHe}
+
+
+        public:
+            //Constructor sets gas mix and constants
+            Cell(float sample_time, Constants constants);
+
+            //Manually set partial pressures
+            void set_partial_pressures(float new_pN2, float new_pHe);
+
+            //Invoke dive segment (Wrapper for buhl)
+            void invoke_dive_segment(Segment segment);
+
+    };
+}
+
+#endif //MODEL_BUHL_H
