@@ -27,7 +27,10 @@ namespace DecoModel {
             static bool at_first_stop;
 
             //Sample time when decompressing
-            static const float dt;
+            const float dt;
+
+            //Gradient factor params
+            float GF;
 
             //*****Methods*****
             
@@ -35,6 +38,8 @@ namespace DecoModel {
             void dive_segment_buhl(int time, int start_depth, 
                 int depth_rate, std::vector<float> gas); //Gas {FN2, FHe}
 
+            //Ceiling - gas only
+            int get_ceiling_buhl();
 
         public:
             //Constructor sets gas mix and constants
@@ -44,8 +49,11 @@ namespace DecoModel {
             void set_partial_pressures(float new_pN2, float new_pHe);
 
             //Invoke dive segment (Wrapper for buhl)
-            void invoke_dive_segment(Segment segment);
+            void invoke_dive_segment(int time, int start_depth, 
+                int depth_rate, std::vector<float> gas); //Gas {FN2, FHe}
 
+            //Ceiling wrapper
+            int get_ceiling();
     };
 }
 

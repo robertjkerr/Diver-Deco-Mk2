@@ -15,7 +15,7 @@ static const std::vector<float> BValsHe = {0.42, 0.57, 0.65, 0.72, 0.76, 0.8, 0.
 //******************************************
 // Choose constants based on compartment
 //******************************************
-DecoModel::Constants::Constants(int cellIndex) 
-        : halflifeN2(halfLivesN2[cellIndex]), AN2(AValsN2[cellIndex]),
-        BN2(BValsN2[cellIndex]), halflifeHe(halfLivesHe[cellIndex]),
-        AHe(AValsHe[cellIndex]), BHe(BValsHe[cellIndex]) {}
+DecoModel::Constants::Constants(int cell_index) 
+        : halflifeN2(halfLivesN2[cell_index]), AN2(AValsN2[cell_index]),
+        BN2(BValsN2[cell_index]), halflifeHe(halfLivesHe[cell_index]),
+        AHe(AValsHe[cell_index]), BHe(BValsHe[cell_index]) {}

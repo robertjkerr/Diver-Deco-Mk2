@@ -7,6 +7,7 @@ The defined types abstraction for deco stops etc
 #define MODEL_TYPES_H
 
 #include <vector>
+#include <algorithm>
 #include <math.h>
 
 //Some constants
@@ -20,15 +21,22 @@ The defined types abstraction for deco stops etc
 #define AIR_PO2 0.21
 #define AIR_PHE 0
 #define NUM_COMPARTMENTS 16
+#define LOG2 0.693147
+
+//*****Macros*****
 
 //Pressure/depth and halflife/k value conversions
 #define PRES2DEPTH(pressure) (pressure + 1) * 10
 #define DEPTH2PRES(depth) depth / 10 - 1
-#define LOG2 0.693147
 #define HALFLIVE2K(halflife) LOG2/(halflife*60)
 
 //Schreiner equation
 #define SCHREINER(pInit, rate, time, k, pAmbInit) pAmbInit+rate*(time-1/k)-(pAmbInit-pInit-rate/k)*exp(-k*time)
+
+//Round to multiple of 3
+#define ROUNDSTOP(depth) depth - depth % 3 + 3
+
+//**********
 
 namespace DecoModel {
     //Type for an arbitrary linear dive segment

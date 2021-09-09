@@ -9,20 +9,20 @@ using namespace DecoModel;
 //******************************************
 // Deco stops algorithm
 //******************************************
-std::vector<DecoStop*>* get_deco_stops(
+std::vector<DecoStop*> get_deco_stops(
     Tissues* compartments) {
 
 }
 
 
 //******************************************
-// Deco stops to dive segments
+// Turn deco stops to dive segments
 //******************************************
-std::vector<Segment*>* deco2seg(int bottom_depth,
+std::vector<Segment*> deco2seg(int bottom_depth,
     std::vector<DecoStop*> stops, std::vector<int> bottom_gas) {
 
     int depth, next_depth, stop_num;
-    std::vector<Segment*>* segments;
+    std::vector<Segment*> segments;
     Segment* segment;
     DecoStop* stop;
 
@@ -30,13 +30,13 @@ std::vector<Segment*>* deco2seg(int bottom_depth,
 
     //Ascent from bottom to first stop
     segment = asc_seg(next_depth, bottom_depth, bottom_gas, false);
-    segments->push_back(segment);
+    segments.push_back(segment);
 
     //Deco stops and ascents
     for (stop_num = 0; stop_num < stops.size(); stop_num++) {
         stop = stops[stop_num];
         segment = stop2seg(stop);
-        segments->push_back(segment);
+        segments.push_back(segment);
 
         depth = stop->depth;
 
@@ -50,7 +50,7 @@ std::vector<Segment*>* deco2seg(int bottom_depth,
         
         //Append ascent to next stop
         segment = asc_seg(depth, next_depth, stop->gas, true);
-        segments->push_back(segment);
+        segments.push_back(segment);
     } 
 
     return segments;
