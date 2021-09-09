@@ -6,3 +6,5 @@ src/model/tracking/*.o
 src/model/tracking/*.exe
 src/model/types_constants/*.o
 src/model/types_constants/*.exe
+*.o
+*.exe

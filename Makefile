@@ -3,8 +3,11 @@ alg = src/model/algorithm
 comps = src/model/compartments
 types = src/model/types_constants
 
-#deco_algorithm.o: ${alg}/deco_algorithm.cpp ${alg}/deco_algorithm.hpp
-#	g++ -c ${alg}/deco_algorithm.cpp
+all: tissues.o buhlmann.o vpm.o deco_algorithm.o
+
+deco_algorithm.o: ${alg}/deco_algorithm.cpp ${alg}/deco_algorithm.hpp
+	g++ -c ${alg}/deco_algorithm.cpp
+
 tissues.o: ${comps}/tissues.cpp ${comps}/tissues.hpp
 	g++ -c ${comps}/tissues.cpp
 

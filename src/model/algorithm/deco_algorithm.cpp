@@ -4,21 +4,56 @@ Deco algorithm logic
 
 #include "deco_algorithm.hpp"
 
-using namespace DecoModel;
+using Segment = DecoModel::Segment;
+using DecoStop = DecoModel::DecoStop;
 
 //******************************************
 // Deco stops algorithm
 //******************************************
+/*
 std::vector<DecoStop*> get_deco_stops(
     Tissues* compartments) {
 
+}
+*/
+
+
+//******************************************
+// Turn a single deco stop into a segment
+//******************************************
+static Segment* stop2seg(DecoStop* stop) {
+    Segment* segment;
+    segment = new Segment(stop->depth, 0, stop->time, stop->gas);
+    return segment;
+}
+
+
+//******************************************
+// Create ascent segment
+//******************************************
+static Segment* asc_seg(int depth1, int depth2, std::vector<int> gas, bool in_deco) {
+    int rate, time;
+    Segment* segment;
+
+    //Pick ascent rate
+    if (in_deco == true) {
+        rate = MAX_DECO_ASCENT_RATE;
+    }
+    else {
+        rate = MAX_ASCENT_RATE;
+    }
+
+    //Find time and create segment
+    time = static_cast<int> ((depth2 - depth1) / rate);
+    segment = new Segment(depth1, rate, time, gas);
+    return segment;
 }
 
 
 //******************************************
 // Turn deco stops to dive segments
 //******************************************
-std::vector<Segment*> deco2seg(int bottom_depth,
+std::vector<Segment*> DecoModel::deco2seg(int bottom_depth,
     std::vector<DecoStop*> stops, std::vector<int> bottom_gas) {
 
     int depth, next_depth, stop_num;
@@ -57,33 +92,3 @@ std::vector<Segment*> deco2seg(int bottom_depth,
 }
 
 
-//******************************************
-// Turn a single deco stop into a segment
-//******************************************
-static Segment* stop2seg(DecoStop* stop) {
-    Segment* segment;
-    segment = new Segment(stop->depth, 0, stop->time, stop->gas);
-    return segment;
-}
-
-
-//******************************************
-// Create ascent segment
-//******************************************
-static Segment* asc_seg(int depth1, int depth2, std::vector<int> gas, bool in_deco) {
-    int rate, time;
-    Segment* segment;
-
-    //Pick ascent rate
-    if (in_deco == true) {
-        rate = MAX_DECO_ASCENT_RATE;
-    }
-    else {
-        rate = MAX_ASCENT_RATE;
-    }
-
-    //Find time and create segment
-    time = static_cast<int> ((depth2 - depth1) / rate);
-    segment = new Segment(depth1, rate, time, gas);
-    return segment;
-}
