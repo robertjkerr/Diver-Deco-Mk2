@@ -26,8 +26,8 @@ The defined types abstraction for deco stops etc
 //*****Macros*****
 
 //Pressure/depth and halflife/k value conversions
-#define PRES2DEPTH(pressure) (pressure + 1) * 10
-#define DEPTH2PRES(depth) depth / 10 - 1
+#define PRES2DEPTH(pressure) (pressure - 1) * 10
+#define DEPTH2PRES(depth) depth / 10 + 1
 #define HALFLIVE2K(halflife) LOG2/(halflife*60)
 
 //Schreiner equation

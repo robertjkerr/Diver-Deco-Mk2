@@ -12,7 +12,8 @@ using Tissues = DecoModel::Tissues;
 // Deco stops algorithm
 //******************************************
 std::vector<DecoStop*> get_deco_stops(Tissues compartments) {
-
+    //Note that compartments and all the properties of it are in the stack
+    // so the object is essentially copied
     float time;
     int num_stops, stop_depth;
     std::vector<DecoStop*> deco_stops;
@@ -75,13 +76,9 @@ std::vector<Segment*> DecoModel::deco2seg(int bottom_depth,
         depth = stop->depth;
 
         //Get next stop depth
-        if (depth == SHALLOWEST_STOP) {
-            next_depth = 0;
-        }
-        else {
-            next_depth = stops[stop_num + 1]->depth;
-        } 
-        
+        next_depth = depth == SHALLOWEST_STOP ? next_depth = 0
+                        : next_depth = stops[stop_num + 1]->depth;
+
         //Append ascent to next stop
         segment = asc_seg(depth, next_depth, stop->gas, true);
         segments.push_back(segment);

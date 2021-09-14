@@ -22,10 +22,6 @@ namespace DecoModel {
             float pN2 = RESET_N2;
             float pHe = RESET_HE;
 
-            //Deco status
-            static bool in_deco;
-            static bool at_first_stop;
-
             //Sample time when decompressing
             const float dt;
 
@@ -54,6 +50,9 @@ namespace DecoModel {
 
             //Ceiling wrapper
             int get_ceiling();
+
+            //Changes gradient factor
+            void set_GF(float new_GF);
     };
 }
 

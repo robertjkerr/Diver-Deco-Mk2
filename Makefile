@@ -11,7 +11,6 @@ SRCS = ${wildcard ${wildcard ${MODEL_SRC}/*/}*.cpp}
 
 OBJS := ${SRCS:${MODEL_SRC}/%.cpp=${OBJ_DIR}/%.o}
 
-API := ${SRCS:${MODEL_SRC}/api/%.cpp=${OBJ_DIR}/%.o}
 COMPS := ${SRCS:${MODEL_SRC}/compartments/%.cpp=${OBJ_DIR}/%.o}
 ALG := ${SRCS:${MODEL_SRC}/algorithm/%.cpp=${OBJ_DIR}/%.o}
 TRACK := ${SRCS:${MODEL_SRC}/tracking/%.cpp=${OBJ_DIR}/%.o}

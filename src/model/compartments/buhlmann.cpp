@@ -62,3 +62,11 @@ int DecoModel::Cell::get_ceiling_buhl() {
     ceiling = static_cast<int> (PRES2DEPTH(p_ceiling));
     return ceiling;
 }
+
+
+//******************************************
+// Sets the gradient factor
+//******************************************
+void DecoModel::Cell::set_GF(float new_GF) {
+    GF = new_GF;
+}
