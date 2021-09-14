@@ -2,7 +2,7 @@
 Logic for Varying permeability cell
 */
 
-#include "vpm.hpp"
+#include "vpm.h"
 
 //******************************************
 // Override dive segment

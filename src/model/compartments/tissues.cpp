@@ -2,7 +2,7 @@
 Logic for tissues class
 */
 
-#include "tissues.hpp"
+#include "tissues.h"
 
 //******************************************
 // Initialise compartments
@@ -15,12 +15,8 @@ DecoModel::Tissues::Tissues(bool vpm_flag, float GFHiIn, float GFLoIn,
 
     for (n = 0; n < NUM_COMPARTMENTS; n++) {
         //Init Buhlmann or VPM compartment
-        if (vpm_flag == false) {
-            compartment = new Cell(dt, Constants(n));
-        }
-        else {
-            compartment = new CellVPM(dt, Constants(n));
-        }
+        compartment = vpm_flag == false ? new Cell(dt, Constants(n)) : 
+                                        new CellVPM(dt, Constants(n));
 
         compartments.push_back(compartment);
     }

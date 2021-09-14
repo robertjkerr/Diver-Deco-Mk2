@@ -5,8 +5,8 @@ Header for type for all compartments
 #ifndef TISSUES_H
 #define TISSUES_H
 
-#include "../types_constants/types.hpp"
-#include "vpm.hpp"
+#include "../types_constants/types.h"
+#include "vpm.h"
 
 namespace DecoModel {
     class Tissues {

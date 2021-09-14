@@ -5,7 +5,7 @@ Header for the class for a single Buhlmann tissue compartment
 #ifndef MODEL_BUHL_H
 #define MODEL_BUHL_H
 
-#include "../types_constants/types.hpp"
+#include "../types_constants/types.h"
 
 namespace DecoModel {
     class Cell {

@@ -5,8 +5,8 @@ Header for a VPM tissue compartment
 #ifndef MODEL_VPM_H
 #define MODEL_VPM_H
 
-#include "../types_constants/types.hpp"
-#include "buhlmann.hpp"
+#include "../types_constants/types.h"
+#include "buhlmann.h"
 
 namespace DecoModel {
     class CellVPM : public Cell {

@@ -1,10 +1,6 @@
-src/model/compartments/*.o
-src/model/compartments/*.exe
-src/model/algorithm/*.o
-src/model/algorithm/*.exe
-src/model/tracking/*.o
-src/model/tracking/*.exe
-src/model/types_constants/*.o
-src/model/types_constants/*.exe
+src/model/*/*.o
+src/model/*/*.exe
 *.o
 *.exe
+include
+bin

@@ -2,20 +2,24 @@
 Deco algorithm logic
 */
 
-#include "deco_algorithm.hpp"
+#include "deco_algorithm.h"
 
 using Segment = DecoModel::Segment;
 using DecoStop = DecoModel::DecoStop;
+using Tissues = DecoModel::Tissues;
 
 //******************************************
 // Deco stops algorithm
 //******************************************
-/*
-std::vector<DecoStop*> get_deco_stops(
-    Tissues* compartments) {
+std::vector<DecoStop*> get_deco_stops(Tissues compartments) {
+
+    float time;
+    int num_stops, stop_depth;
+    std::vector<DecoStop*> deco_stops;
+
+    
 
 }
-*/
 
 
 //******************************************
@@ -36,12 +40,7 @@ static Segment* asc_seg(int depth1, int depth2, std::vector<int> gas, bool in_de
     Segment* segment;
 
     //Pick ascent rate
-    if (in_deco == true) {
-        rate = MAX_DECO_ASCENT_RATE;
-    }
-    else {
-        rate = MAX_ASCENT_RATE;
-    }
+    rate = in_deco == true ? MAX_DECO_ASCENT_RATE : MAX_ASCENT_RATE;
 
     //Find time and create segment
     time = static_cast<int> ((depth2 - depth1) / rate);

@@ -2,7 +2,7 @@
 Constructor definitions for types
 */
 
-#include "types.hpp"
+#include "types.h"
 
 //******************************************
 // Assign params for dive segment

@@ -2,7 +2,7 @@
 Logic for a Buhlmann tissue compartment
 */
 
-#include "buhlmann.hpp"
+#include "buhlmann.h"
 
 //******************************************
 // Constructor sets constants

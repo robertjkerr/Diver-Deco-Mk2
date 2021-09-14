@@ -2,7 +2,7 @@
 Constructor and values of constants
 */
 
-#include "types.hpp"
+#include "types.h"
 
 //Arrays with all the constants options
 static const std::vector<float> halfLivesN2 = {4, 8, 12, 18, 27, 38, 54, 77, 109, 146, 187, 239, 305, 390, 498, 635};
