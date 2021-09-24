@@ -11,6 +11,7 @@ Header for type for all compartments
 namespace DecoModel {
     class Tissues {
         private:
+            //Compartments are kept in stack to make copying easier
             std::vector<Cell> compartments;
 
             const float dt;
