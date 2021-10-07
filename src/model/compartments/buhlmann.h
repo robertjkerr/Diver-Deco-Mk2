@@ -32,7 +32,7 @@ namespace DecoModel {
             
             //Dive segment - gas only
             void dive_segment_buhl(int time, int start_depth, 
-                int depth_rate, std::vector<float> gas); //Gas {FN2, FHe}
+                int depth_rate, float* gas); //Gas {FN2, FHe}
 
             //Ceiling - gas only
             int get_ceiling_buhl();
@@ -46,7 +46,7 @@ namespace DecoModel {
 
             //Invoke dive segment (Wrapper for buhl)
             void invoke_dive_segment(int time, int start_depth, 
-                int depth_rate, std::vector<float> gas); //Gas {FN2, FHe}
+                int depth_rate, float* gas); //Gas {FN2, FHe}
 
             //Ceiling wrapper
             int get_ceiling();

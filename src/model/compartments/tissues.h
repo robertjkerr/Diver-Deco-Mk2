@@ -11,10 +11,8 @@ Header for type for all compartments
 namespace DecoModel {
     class Tissues {
         private:
-            //Compartments are kept in stack to make copying easier
+            //Compartments are kept in Tissues objs to make copying easier
             std::vector<Cell> compartments;
-
-            const float dt;
 
             const float GFHi;
             const float GFLo;
@@ -24,11 +22,13 @@ namespace DecoModel {
             void reset_GF(int depth);
 
         public:
+            const float dt;
+            
             Tissues(bool vpm_flag, float GFLoIn, float GFHiIn, float sample_time);
 
             int get_ceiling();
 
-            void invoke_dive_segment(Segment* segment);
+            void invoke_dive_segment(Segment segment);
 
     };
 }

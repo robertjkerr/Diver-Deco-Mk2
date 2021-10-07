@@ -15,7 +15,7 @@ namespace DecoModel {
             //*****Methods*****
 
             //Dive segment - bubble only
-            void dive_segment_vpm(int time, int start_depth, int depth_rate, std::vector<float> gas);
+            void dive_segment_vpm(int time, int start_depth, int depth_rate, float* gas);
 
             //Bubble ceiling
             int get_ceiling_vpm();
@@ -25,7 +25,7 @@ namespace DecoModel {
             CellVPM(float sample_time, Constants constants);
             
             //Override dive segment wrapper
-            void invoke_dive_segment(int time, int start_depth, int depth_rate, std::vector<float> gas);
+            void invoke_dive_segment(int time, int start_depth, int depth_rate, float* gas);
 
             //Override ceiling wrapper
             int get_ceiling();
