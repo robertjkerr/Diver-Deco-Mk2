@@ -9,15 +9,17 @@ namespace DecoModel {
     class Diver {
         private:
             Tissues* compartments;
-            std::vector<Tank*> tanks;
+            std::vector<Tank> tanks;
 
             void use_gas();
 
         public:
             Diver(bool vpm_flag, float gfhi, float gflo, float sample_time,
-                std::vector<std::vector<int>> gases, int breathing_rate);
+                std::vector<int*> gases, int breathing_rate);
 
-            void invoke_dive_segment(Segment* segment);
+            void invoke_dive_segment(Segment& segment);
+
+            std::vector<DecoStop> get_deco_stops();
 
     };
 }

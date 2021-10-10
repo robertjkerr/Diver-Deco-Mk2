@@ -6,12 +6,29 @@ Logic for a Buhlmann tissue compartment
 
 namespace DecoModel {
     //******************************************
+    // Default constructor
+    //******************************************
+    Cell::Cell()
+            : kN2(HALFLIVE2K(1)), kHe(HALFLIVE2K(1)),
+            AN2(0), BN2(0), AHe(0), BHe(0) {};
+
+
+    //******************************************
     // Constructor sets constants
     //******************************************
-    Cell::Cell(float sample_time, Constants constants)
+    Cell::Cell(Constants constants)
             : kN2(HALFLIVE2K(constants.halflifeN2)), kHe(HALFLIVE2K(constants.halflifeHe)),
             AN2(constants.AN2), BN2(constants.BN2), 
-            AHe(constants.AHe), BHe(constants.BHe), dt(sample_time) {};
+            AHe(constants.AHe), BHe(constants.BHe) {};
+
+
+    //******************************************
+    // Sets new partial pressures
+    //******************************************
+    void Cell::set_partial_pressures(float new_pN2, float new_pHe) {
+        pN2 = new_pN2;
+        pHe = new_pHe;
+    }
 
 
     //******************************************
@@ -71,4 +88,18 @@ namespace DecoModel {
     void Cell::set_GF(float new_GF) {
         GF = new_GF;
     }
+
+
+    //******************************************
+    // Returns the members of the object
+    //******************************************
+    std::array<float, 3> Cell::get_members() {
+        std::array<float, 3> out = {pN2, pHe, GF};
+        return out;
+    }
+    
+    Cell& Cell::operator=(Cell& new_cell) {
+        return new_cell;
+    }
+
 }

@@ -22,9 +22,6 @@ namespace DecoModel {
             float pN2 = RESET_N2;
             float pHe = RESET_HE;
 
-            //Sample time when decompressing
-            const float dt;
-
             //Gradient factor params
             float GF;
 
@@ -38,8 +35,10 @@ namespace DecoModel {
             int get_ceiling_buhl();
 
         public:
+            Cell();
+
             //Constructor sets gas mix and constants
-            Cell(float sample_time, Constants constants);
+            Cell(Constants constants);
 
             //Manually set partial pressures
             void set_partial_pressures(float new_pN2, float new_pHe);
@@ -53,6 +52,12 @@ namespace DecoModel {
 
             //Changes gradient factor
             void set_GF(float new_GF);
+
+            //Returns members values
+            std::array<float, 3> get_members();
+
+            Cell& operator=(Cell& new_cell);
+
     };
 }
 

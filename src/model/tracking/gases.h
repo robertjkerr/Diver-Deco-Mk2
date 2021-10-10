@@ -14,7 +14,7 @@ namespace DecoModel {
         int vol_used;
 
         void breathe(int depth, int time);
-        Tank(int b_rate, std::vector<int> gas_mix);
+        Tank(int b_rate, int* gas_mix);
     };
 }
 

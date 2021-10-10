@@ -22,13 +22,11 @@ namespace DecoModel {
             void reset_GF(int depth);
 
         public:
-            const float dt;
-            
-            Tissues(bool vpm_flag, float GFLoIn, float GFHiIn, float sample_time);
+            Tissues(bool vpm_flag, float GFLoIn, float GFHiIn);
 
             int get_ceiling();
 
-            void invoke_dive_segment(Segment segment);
+            void invoke_dive_segment(Segment& segment);
 
     };
 }

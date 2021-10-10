@@ -9,11 +9,12 @@ Header for deco algorithm methods
 
 namespace DecoModel {
     //Deco stops algorithm function
-    std::vector<DecoStop> get_deco_stops(Tissues* compartments);
+    std::vector<DecoStop> get_deco_stops(Tissues compartments, int current_depth,
+                                    std::vector<int*> gases, float dt);
 
     //Convert deco stops into an array of dive segments
-    std::vector<Segment> deco2seg(int bottom_depth, std::vector<DecoStop*> stops, 
-        std::vector<int> bottom_gas);
+    std::vector<Segment> deco2seg(int bottom_depth, std::vector<DecoStop>& stops, 
+        int* bottom_gas);
 
 }
 

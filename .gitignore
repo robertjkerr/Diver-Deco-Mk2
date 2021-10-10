@@ -5,3 +5,9 @@ src/model/*/*.exe
 include
 bin
 build
+.fake
+.ionide
+src/model/test.cpp
+src/model/test.exe
+src/model/build.sh
+.vscode

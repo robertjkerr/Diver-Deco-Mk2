@@ -8,6 +8,7 @@ The defined types abstraction for deco stops etc
 
 #include <vector>
 #include <algorithm>
+#include <array>
 #include <math.h>
 
 //Some constants
@@ -21,6 +22,7 @@ The defined types abstraction for deco stops etc
 #define AIR_PO2 0.21f
 #define AIR_PHE 0.0f
 #define NUM_COMPARTMENTS 16
+#define NUM_INERT_GASES 2
 #define MAX_BOTTOM_PO2 1.4f
 #define MAX_DECO_PO2 1.6f
 #define LOG2 0.693147f
@@ -36,11 +38,12 @@ The defined types abstraction for deco stops etc
 namespace DecoModel {
     //Type for an arbitrary linear dive segment
     struct Segment {
-        //Values mimic the straight line equation
+        //Values mimic the straight line equation. Time is in minutes.
         const int start_depth;
         const float rate;
         const int time;
-        const int gas[2];
+        const int gas[NUM_INERT_GASES];
+        Segment();
         Segment(int seg_start_depth, float seg_rate, int seg_time, const int* gas_mix);
     };
 
@@ -48,7 +51,8 @@ namespace DecoModel {
     struct DecoStop {
         const int depth;
         const int time;
-        const int gas[2]; //{%O2, %He}
+        const int gas[NUM_INERT_GASES]; //{%O2, %He}
+        DecoStop();
         DecoStop(int stop_depth, int stop_time, const int* gas_mix);
     };
 
@@ -60,7 +64,9 @@ namespace DecoModel {
         const float halflifeHe;
         const float AHe;
         const float BHe;
-        Constants(int cell_index);
+        const unsigned int cell_index;
+        Constants();
+        Constants(unsigned int cell_index);
     };
 }
 
