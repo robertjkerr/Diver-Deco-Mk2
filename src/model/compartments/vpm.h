@@ -21,10 +21,14 @@ namespace DecoModel {
             int get_ceiling_vpm();
 
         public:
-            CellVPM();
-
             //Set constants
             CellVPM(float sample_time, Constants constants);
+
+            //Override dive segment function
+            void invoke_dive_segment(int time, int start_depth, int rate, float* gas);
+
+            //Override ceiling function
+            int get_ceiling();
             
     };
 }

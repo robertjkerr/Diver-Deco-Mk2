@@ -22,16 +22,18 @@ namespace DecoModel{
         //Select richest possible gas, ascend to next stop and wait 
         do {
             gas = select_rich_gas(gases, current_depth, in_deco);
+            //Ascend twice to account for offgassing during first ascent
+            current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
             current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
             in_deco = true;
 
-            ceil = compartments.get_ceiling();
+            ceil = ROUNDSTOP(compartments.get_ceiling());
             new_ceil = ceil;
             time = 0;
 
             while (ceil == new_ceil) {
                 wait(&compartments, current_depth, gas, dt);
-                new_ceil = compartments.get_ceiling();
+                new_ceil = ROUNDSTOP(compartments.get_ceiling());
                 time = time + dt;
             }
 

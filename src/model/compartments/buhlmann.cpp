@@ -6,14 +6,6 @@ Logic for a Buhlmann tissue compartment
 
 namespace DecoModel {
     //******************************************
-    // Default constructor
-    //******************************************
-    Cell::Cell()
-            : kN2(HALFLIVE2K(1)), kHe(HALFLIVE2K(1)),
-            AN2(0), BN2(0), AHe(0), BHe(0) {};
-
-
-    //******************************************
     // Constructor sets constants
     //******************************************
     Cell::Cell(Constants constants)
@@ -37,14 +29,19 @@ namespace DecoModel {
     void Cell::dive_segment_buhl(int time, int start_depth, 
             int rate, float* gas) {
 
-        float pAmb, pN2_rate, pHe_rate;
+        float pAmb, pN2_rate, pHe_rate, pO2_rate;
 
+        //Unit conversions
         pAmb = DEPTH2PRES(start_depth);
         pN2_rate = rate * gas[0] / 10;
         pHe_rate = rate * gas[1] / 10;
+        
 
-        pN2 = SCHREINER(pN2, pN2_rate, time, kN2, pAmb * gas[0]);
-        pHe = SCHREINER(pHe, pHe_rate, time, kHe, pAmb * gas[1]);
+        //Increment tissue partial pressures
+        pN2 = SCHREINER(pN2, pN2_rate, time, kN2, (pAmb * gas[0]));
+        pHe = SCHREINER(pHe, pHe_rate, time, kHe, (pAmb * gas[1]));
+
+        
     }
 
 
@@ -98,8 +95,4 @@ namespace DecoModel {
         return out;
     }
     
-    Cell& Cell::operator=(Cell& new_cell) {
-        return new_cell;
-    }
-
 }

@@ -25,9 +25,10 @@ namespace DecoModel {
             //Gradient factor params
             float GF;
 
+
             //*****Methods*****
             
-            //Dive segment - gas only
+            //Dive segment - dissolved gas & otu counting
             void dive_segment_buhl(int time, int start_depth, 
                 int depth_rate, float* gas); //Gas {FN2, FHe}
 
@@ -35,13 +36,14 @@ namespace DecoModel {
             int get_ceiling_buhl();
 
         public:
-            Cell();
-
             //Constructor sets gas mix and constants
             Cell(Constants constants);
 
             //Manually set partial pressures
             void set_partial_pressures(float new_pN2, float new_pHe);
+
+            //Manually set otu
+            void set_otu(float new_otu);
 
             //Invoke dive segment (Wrapper for buhl)
             void invoke_dive_segment(int time, int start_depth, 
@@ -55,8 +57,6 @@ namespace DecoModel {
 
             //Returns members values
             std::array<float, 3> get_members();
-
-            Cell& operator=(Cell& new_cell);
 
     };
 }

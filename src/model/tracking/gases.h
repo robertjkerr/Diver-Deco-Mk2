@@ -9,7 +9,7 @@ Gas tracking structures
 
 namespace DecoModel {
     struct Tank {
-        const std::vector<int> gas;
+        const int gas[NUM_INERT_GASES];
         const int breathing_rate;
         int vol_used;
 

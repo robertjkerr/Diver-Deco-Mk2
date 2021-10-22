@@ -34,6 +34,7 @@ The defined types abstraction for deco stops etc
 #define SCHREINER(pInit, rate, time, k, pAmbInit) pAmbInit+rate*(time-1/k)-(pAmbInit-pInit-rate/k)*exp(-k*time)
 #define ROUNDSTOP(depth) depth - depth % 3 + 3
 #define MOD(gas, in_deco) static_cast<int> (DEPTH2PRES(100 * in_deco==true?MAX_DECO_PO2:MAX_BOTTOM_PO2 / gas[0]))
+#define OTU(rate, time, pO2Init) (3*time/11)/(pO2Init+rate*time-pO2Init)*(pow((pO2Init+rate*time-0.5f)/0.5f,11/6)-pow((pO2Init-0.5f)/0.5f,11/6))
 
 namespace DecoModel {
     //Type for an arbitrary linear dive segment

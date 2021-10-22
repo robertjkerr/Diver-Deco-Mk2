@@ -39,7 +39,7 @@ namespace DecoModel {
     static int asc2ceil(Tissues* compartments, int current_depth,
                             int* gas, bool in_deco) {
 
-        int ceiling = compartments->get_ceiling();
+        int ceiling = ROUNDSTOP(compartments->get_ceiling());
         Segment segment = asc_seg(current_depth, ceiling, gas, in_deco);
         compartments->invoke_dive_segment(segment);
         return ceiling;
@@ -49,19 +49,10 @@ namespace DecoModel {
     //******************************************
     // Waits at depth until ceiling changes
     //******************************************
-    static void wait(Tissues* compartments, int current_depth, int* gas, float dt) {
-        int first_ceiling, ceiling;
-
-        first_ceiling = ROUNDSTOP(compartments->get_ceiling());
-        ceiling = first_ceiling;
-
-        while (ceiling == first_ceiling) {
-            Segment segment = stop2seg(DecoStop(current_depth, dt, gas));
-            compartments->invoke_dive_segment(segment);
-            
-            ceiling = ROUNDSTOP(compartments->get_ceiling());
-        }
-
+    static void wait(Tissues* compartments, int current_depth, int* gas, float time) {
+        Segment segment = stop2seg(DecoStop(current_depth, time, gas)) ;
+        compartments->invoke_dive_segment(segment);
+        
     }
 
 

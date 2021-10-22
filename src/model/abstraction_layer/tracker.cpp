@@ -13,7 +13,9 @@ namespace DecoModel {
         
         int n, num_tanks;
 
-        compartments = new Tissues(vpm_flag, GFHi, GFLo, sample_time);
+        dt = sample_time;
+
+        compartments = new Tissues(vpm_flag, GFHi, GFLo);
 
         num_tanks = gases.size();
         for (n = 0; n < num_tanks; n++) {
@@ -22,17 +24,27 @@ namespace DecoModel {
 
         
 
-
-
     }
 
 
-    //**************************************
+    
+
+    //******************************************
     // Returns the deco stops needed
-    //**************************************
+    //******************************************
     std::vector<DecoStop> Diver::get_deco_stops() {
+        std::vector<int[NUM_INERT_GASES]> gases;
+        int* gas;
+
+        //Get gases from tanks
+        for (Tank tank: tanks) {
+            gas = tank.gas;
+            gases.push_back(tank.gas);
+        }
+
+
         //Call deco algorithm function
-        return DecoModel::get_deco_stops(*compartments);
+        return DecoModel::get_deco_stops(*compartments, gases);
     }
 
 

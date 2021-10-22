@@ -63,11 +63,14 @@ namespace DecoModel {
     //******************************************
     void Tissues::invoke_dive_segment(Segment& segment) {
         int time, start_depth, depth_rate, n;
-        float gas[2];
+        float gas[2], pO2_rate, pAmb;
 
         time = segment.time * 60; //Convert to seconds
         start_depth = segment.start_depth;
         depth_rate = segment.rate;
+
+        pO2_rate = depth_rate * (1 - gas[0] - gas[1]) / 10;
+        pAmb = DEPTH2PRES(start_depth);
 
         gas[0] = static_cast<float> (100 - segment.gas[0] - segment.gas[1]) / 100;
         gas[1] = static_cast<float> (segment.gas[1]) / 100;
@@ -75,5 +78,16 @@ namespace DecoModel {
         for (n = 0; n < NUM_COMPARTMENTS; n++) {
             compartments[n].invoke_dive_segment(time, start_depth, depth_rate, gas);
         }
+
+        //Increment otu
+        otu = otu + OTU(pO2_rate, time, (pAmb * (1 - gas[0] - gas[1])));
+    }
+
+    
+    //******************************************
+    // Hard sets OTU
+    //******************************************
+    void Tissues::set_otu(float new_otu) {
+        otu = new_otu;
     }
 }

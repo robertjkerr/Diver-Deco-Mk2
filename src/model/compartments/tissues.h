@@ -18,6 +18,9 @@ namespace DecoModel {
             const float GFLo;
             float GF_grad;
 
+            //Oxygen toxicity unit count
+            float otu = 0;
+
             void set_GF_grad(int first_stop_depth);
             void reset_GF(int depth);
 
@@ -27,6 +30,8 @@ namespace DecoModel {
             int get_ceiling();
 
             void invoke_dive_segment(Segment& segment);
+
+            void set_otu(float new_otu);
 
     };
 }
