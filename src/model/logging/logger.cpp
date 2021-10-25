@@ -14,7 +14,7 @@ namespace DecoModel {
     void Logger::log_buhl(void* tissues_in) {
         Tissues* tissues = (Tissues*) tissues_in; 
 
-        int i;
+        uint8_t i;
         float pN2, pHe;
         std::array<float, 3> members;
         std::vector<Cell> compartments = tissues->get_compartments();

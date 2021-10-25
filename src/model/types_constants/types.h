@@ -10,6 +10,7 @@ The defined types abstraction for deco stops etc
 #include <algorithm>
 #include <array>
 #include <math.h>
+#include <stdint.h>
 
 //Some constants
 #define SHALLOWEST_STOP 6
@@ -33,26 +34,26 @@ The defined types abstraction for deco stops etc
 #define HALFLIVE2K(halflife) LOG2/(halflife*60)
 #define SCHREINER(pInit, rate, time, k, pAmbInit) pAmbInit+rate*(time-1/k)-(pAmbInit-pInit-rate/k)*exp(-k*time)
 #define ROUNDSTOP(depth) depth - depth % 3 + 3
-#define MOD(gas, in_deco) static_cast<int> (DEPTH2PRES(100 * in_deco==true?MAX_DECO_PO2:MAX_BOTTOM_PO2 / gas[0]))
+#define MOD(gas, in_deco) static_cast<uint16_t> (DEPTH2PRES(100 * in_deco==true?MAX_DECO_PO2:MAX_BOTTOM_PO2 / gas[0]))
 #define OTU(rate, time, pO2Init) (3*time/11)/(pO2Init+rate*time-pO2Init)*(pow((pO2Init+rate*time-0.5f)/0.5f,11/6)-pow((pO2Init-0.5f)/0.5f,11/6))
 
 namespace DecoModel {
     //Type for an arbitrary linear dive segment
     struct Segment {
         //Values mimic the straight line equation. Time is in minutes.
-        const int start_depth;
-        const float rate;
-        const int time;
-        const int gas[NUM_INERT_GASES];
-        Segment(int seg_start_depth, float seg_rate, int seg_time, const int* gas_mix);
+        const uint16_t start_depth;
+        const int8_t rate;
+        const uint16_t time;
+        const uint8_t gas[NUM_INERT_GASES];
+        Segment(uint16_t seg_start_depth, int8_t seg_rate, uint16_t seg_time, const uint8_t* gas_mix);
     };
 
     //Type for a deco stop
     struct DecoStop {
-        const int depth;
-        const int time;
-        const int gas[NUM_INERT_GASES]; //{%O2, %He}
-        DecoStop(int stop_depth, int stop_time, const int* gas_mix);
+        const uint16_t depth;
+        const uint16_t time;
+        const uint8_t gas[NUM_INERT_GASES]; //{%O2, %He}
+        DecoStop(uint16_t stop_depth, uint16_t stop_time, const uint8_t* gas_mix);
     };
 
     //Structure for the halflives, A and B values for nth cell
@@ -63,10 +64,9 @@ namespace DecoModel {
         const float halflifeHe;
         const float AHe;
         const float BHe;
-        const unsigned int cell_index;
-        Constants(unsigned int cell_index);
+        const uint8_t cell_index;
+        Constants(uint8_t cell_index);
     };
 }
-
 
 #endif //MODEL_TYPES_H

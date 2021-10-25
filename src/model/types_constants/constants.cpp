@@ -17,7 +17,7 @@ namespace DecoModel {
     //******************************************
     // Choose constants based on compartment
     //******************************************
-    Constants::Constants(unsigned int index) 
+    Constants::Constants(uint8_t index) 
             : halflifeN2(halfLivesN2[index]), AN2(AValsN2[index]),
             BN2(BValsN2[index]), halflifeHe(halfLivesHe[index]),
             AHe(AValsHe[index]), BHe(BValsHe[index]), cell_index(index) {}

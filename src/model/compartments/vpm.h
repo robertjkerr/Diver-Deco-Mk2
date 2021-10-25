@@ -15,20 +15,20 @@ namespace DecoModel {
             //*****Methods*****
 
             //Dive segment - bubble only
-            void dive_segment_vpm(int time, int start_depth, int depth_rate, float* gas);
+            void dive_segment_vpm(uint16_t time, uint16_t start_depth, int depth_rate, float* gas);
 
             //Bubble ceiling
-            int get_ceiling_vpm();
+            uint16_t get_ceiling_vpm();
 
         public:
             //Set constants
             CellVPM(Constants constants, float GFLo);
 
             //Override dive segment function
-            void invoke_dive_segment(int time, int start_depth, int rate, float* gas);
+            void invoke_dive_segment(uint16_t time, uint16_t start_depth, uint8_t rate, float* gas);
 
             //Override ceiling function
-            int get_ceiling();
+            uint16_t get_ceiling();
             
     };
 }

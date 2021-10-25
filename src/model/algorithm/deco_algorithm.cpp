@@ -9,50 +9,53 @@ namespace DecoModel{
     //******************************************
     // Deco stops algorithm
     //******************************************
-    std::vector<DecoStop> get_deco_stops(Tissues compartments, int current_depth,
-                                    std::vector<int*> gases, float dt) {
+    std::vector<DecoStop> get_deco_stops(Tissues compartments, uint16_t current_depth,
+                            std::vector<uint8_t*> gases, uint8_t dt) {
         //Note that compartments is passed by value so the obj is copied
-        float time, max_PO2;
-        int num_stops, stop_depth;
+
+        std::vector<DecoStop> stops;
+        uint16_t ceiling, time;
+        uint8_t* gas;
         bool in_deco = false;
-        std::vector<DecoStop> deco_stops;
-        int* gas;
-        int ceil, new_ceil;
 
-        //Select richest possible gas, ascend to next stop and wait 
         do {
-            gas = select_rich_gas(gases, current_depth, in_deco);
-            //Ascend twice to account for offgassing during first ascent
-            current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
-            current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
-
-            compartments.set_GF_grad(current_depth);
-            in_deco = true;
-
-            ceil = ROUNDSTOP(compartments.get_ceiling());
-            new_ceil = ceil;
-            time = 0;
-
-            while (ceil == new_ceil) {
-                wait(&compartments, current_depth, gas, dt);
-                new_ceil = ROUNDSTOP(compartments.get_ceiling());
-                time = time + dt;
+            if (in_deco == false) {
+                //Ascend to first stop, set GF
+                gas = gases[0];
+                current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
+                compartments.set_GF_grad(current_depth);
+                in_deco = true;
             }
+            else {
+                //Ordinary deco stop - select gas, set GF and wait till ceiling ascends
+                gas = select_rich_gas(gases, current_depth, in_deco);
+                compartments.reset_GF(current_depth);
 
-            //Append deco_stop to vector. Convert time to minutes
-            deco_stops.push_back(DecoStop(current_depth, time/60, gas));
+                ceiling = ROUNDSTOP(compartments.get_ceiling());
+                time = 0;
+                while (current_depth == ceiling) {
+                    wait(&compartments, current_depth, gas, dt);
+                    time = time + dt;
+                }
+
+                stops.push_back(DecoStop(current_depth, time, gas));
+
+                //Ascend to next stop, or the surface
+                current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
+            }
         }
         while (current_depth > 0);
-
-        return deco_stops;
+        
+        return stops;
     }
 
 
     //******************************************
     // Turn deco stops to dive segments
     //******************************************
-    std::vector<Segment> deco2seg(int bottom_depth,
-        std::vector<DecoStop>& stops, int* bottom_gas) {
+    /*
+    std::vector<Segment> deco2seg(uint16_t bottom_depth,
+        std::vector<DecoStop>& stops, uint8_t* bottom_gas) {
 
         int depth, next_depth, stop_num;
         std::vector<Segment> segments;
@@ -79,5 +82,6 @@ namespace DecoModel{
 
         return segments;
     }
+    */
 }
 

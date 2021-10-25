@@ -29,8 +29,8 @@ namespace DecoModel {
     //******************************************
     // Invokes a dive segment on dissolved gases
     //******************************************
-    void Cell::dive_segment_buhl(int time, int start_depth, 
-            int rate, float* gas) {
+    void Cell::dive_segment_buhl(uint16_t time, uint16_t start_depth, 
+            int8_t rate, float* gas) {
 
         float pAmb, pN2_rate, pHe_rate, pO2_rate;
 
@@ -50,8 +50,8 @@ namespace DecoModel {
     //******************************************
     // Invoke dive segment
     //******************************************
-    void Cell::invoke_dive_segment(int time, int start_depth, 
-            int rate, float* gas) {
+    void Cell::invoke_dive_segment(uint16_t time, uint16_t start_depth, 
+            int8_t rate, float* gas) {
 
         dive_segment_buhl(time, start_depth, rate, gas);
     }
@@ -60,7 +60,7 @@ namespace DecoModel {
     //******************************************
     // Ceiling calculation wrapper
     //******************************************
-    int Cell::get_ceiling() {
+    uint16_t Cell::get_ceiling() {
         return get_ceiling_buhl();
     }
 
@@ -68,7 +68,7 @@ namespace DecoModel {
     //******************************************
     // Gets ceiling - dissolved gas
     //******************************************
-    int Cell::get_ceiling_buhl() {
+    uint16_t Cell::get_ceiling_buhl() {
         float A, B, p_ceiling; 
         int ceiling;
 
@@ -76,7 +76,7 @@ namespace DecoModel {
         B = ((BN2 * pN2) + (BHe * pHe)) / (pN2 + pHe);
         p_ceiling = ((pN2 + pHe) - GF * A) * B / (B + GF * (1 - B));
 
-        ceiling = static_cast<int> PRES2DEPTH(p_ceiling);
+        ceiling = static_cast<uint16_t> PRES2DEPTH(p_ceiling);
         return ceiling;
     }
 

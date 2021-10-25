@@ -26,7 +26,7 @@ namespace DecoModel {
     //******************************************
     // Sets the gradient of the GF slope
     //******************************************
-    void Tissues::set_GF_grad(int first_stop_depth) {
+    void Tissues::set_GF_grad(uint16_t first_stop_depth) {
         float first_ceiling = DEPTH2PRES(first_stop_depth);
         GF_grad = (GFHi - GFLo) / (1 - first_ceiling);
     }
@@ -35,10 +35,10 @@ namespace DecoModel {
     //******************************************
     // Sets the GF for a given depth
     //******************************************
-    void Tissues::reset_GF(int depth) {
+    void Tissues::reset_GF(uint16_t depth) {
         float new_GF, pAmb;
         pAmb = DEPTH2PRES(depth);
-        new_GF = GF_grad * (pAmb - 1.3) + GFHi;
+        new_GF = GF_grad * (pAmb - 1.3f) + GFHi;
         for (Cell cell: compartments)
             cell.set_GF(new_GF);
     }
@@ -47,9 +47,10 @@ namespace DecoModel {
     //******************************************
     // Gets maximum ceiling of all cells
     //******************************************
-    int Tissues::get_ceiling() {
-        int n, this_ceiling;
-        std::vector<int> ceilings(NUM_COMPARTMENTS);
+    uint16_t Tissues::get_ceiling() {
+        uint8_t n; 
+        uint16_t this_ceiling;
+        std::vector<uint16_t> ceilings(NUM_COMPARTMENTS);
 
         for (n = 0; n < NUM_COMPARTMENTS; n++) {
             this_ceiling = compartments[n].get_ceiling();
@@ -63,8 +64,10 @@ namespace DecoModel {
     //******************************************
     // Forces all compartments to follow segment
     //******************************************
-    void Tissues::invoke_dive_segment(Segment& segment) {
-        int time, start_depth, depth_rate, n;
+    void Tissues::invoke_dive_segment(Segment segment) {
+        uint16_t time, start_depth; 
+        uint8_t n;
+        int8_t depth_rate;
         float gas[2], pO2_rate, pAmb;
 
         time = segment.time * 60; //Convert to seconds
@@ -74,6 +77,7 @@ namespace DecoModel {
         pO2_rate = depth_rate * (1 - gas[0] - gas[1]) / 10;
         pAmb = DEPTH2PRES(start_depth);
 
+        //Get gas in form of {fN2, fHe}
         gas[0] = static_cast<float> (100 - segment.gas[0] - segment.gas[1]) / 100;
         gas[1] = static_cast<float> (segment.gas[1]) / 100;
 
@@ -101,12 +105,20 @@ namespace DecoModel {
 
 
     //******************************************
-    // Switches logging on/off
+    // Switches logging on
     //******************************************
-    void Tissues::switch_log_state(bool new_state) {
-        log_flag = new_state;
+    void Tissues::start_logging() {
+        log_flag = true;
     }
 
+
+    //******************************************
+    // Switches logging off
+    //******************************************
+    void Tissues::stop_logging() {
+        log_flag = false;
+    }
+    
 
     //******************************************
     // Associates logger object to tissues

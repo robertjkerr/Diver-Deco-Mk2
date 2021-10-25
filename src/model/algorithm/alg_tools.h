@@ -21,14 +21,17 @@ namespace DecoModel {
     //******************************************
     // Create ascent segment
     //******************************************
-    static Segment asc_seg(int depth1, int depth2, const int* gas, bool in_deco) {
-        int rate, time;
+    static Segment asc_seg(uint16_t depth1, uint16_t depth2, 
+            const uint8_t* gas, bool in_deco) {
+
+        int8_t rate; 
+        uint16_t time;
 
         //Pick ascent rate
         rate = in_deco == true ? MAX_DECO_ASCENT_RATE : MAX_ASCENT_RATE;
 
         //Find time and create segment
-        time = static_cast<int> ((depth2 - depth1) / rate);
+        time = static_cast<uint16_t> ((depth2 - depth1) / rate);
         return Segment(depth1, rate, time, gas);
     }
 
@@ -36,12 +39,17 @@ namespace DecoModel {
     //******************************************
     // Ascend to ceiling routine
     //******************************************
-    static int asc2ceil(Tissues* compartments, int current_depth,
-                            int* gas, bool in_deco) {
+    static uint16_t asc2ceil(Tissues* compartments, uint16_t current_depth,
+                            uint8_t* gas, bool in_deco) {
 
-        int ceiling = ROUNDSTOP(compartments->get_ceiling());
-        Segment segment = asc_seg(current_depth, ceiling, gas, in_deco);
-        compartments->invoke_dive_segment(segment);
+        uint16_t ceiling;
+
+        do {
+            ceiling = ROUNDSTOP(compartments->get_ceiling());
+            compartments->invoke_dive_segment(asc_seg(current_depth, ceiling, gas, in_deco));
+        }
+        while (ceiling == ROUNDSTOP(compartments->get_ceiling()));
+
         return ceiling;
     }
 
@@ -49,23 +57,22 @@ namespace DecoModel {
     //******************************************
     // Waits at depth until ceiling changes
     //******************************************
-    static void wait(Tissues* compartments, int current_depth, int* gas, float time) {
+    static void wait(Tissues* compartments, uint16_t current_depth, uint8_t* gas, float time) {
         Segment segment = stop2seg(DecoStop(current_depth, time, gas)) ;
         compartments->invoke_dive_segment(segment);
-        
     }
 
 
     //******************************************
     // Returns the richest possible gas
     //******************************************
-    static int* select_rich_gas(std::vector<int*> gases, 
-                        int current_depth, bool in_deco) {
+    static uint8_t* select_rich_gas(std::vector<uint8_t*>& gases, 
+                        uint16_t current_depth, bool in_deco) {
 
-        int* rich_gas = gases[0];
-        int mod, best_mod;
+        uint8_t* rich_gas = gases[0];
+        uint16_t mod, best_mod;
 
-        for (int n = 0; n < gases.size(); n++) {
+        for (uint8_t n = 0; n < gases.size(); n++) {
             best_mod = MOD(rich_gas, in_deco);
             mod = MOD(gases[n], in_deco);
             if (mod >= current_depth && mod > best_mod) {

@@ -27,28 +27,29 @@ namespace DecoModel {
             bool log_flag = false;
             Logger* logger;
 
-            
-
         public:
             Tissues(bool vpm_flag, float GFLoIn, float GFHiIn);
 
-            int get_ceiling();
+            //Returns depth ceiling
+            uint16_t get_ceiling();
 
-            void invoke_dive_segment(Segment& segment);
-
-            void set_otu(float new_otu);
-
-            void switch_log_state(bool new_state);
-
-            void attach_logger(Logger* logger_ptr);
-
-            std::vector<Cell> get_compartments();
+            //Inacts a linear dive segment on body
+            void invoke_dive_segment(Segment segment);
 
             float get_otu();
+            void set_otu(float new_otu);
+
+            //Data logging methods
+            void attach_logger(Logger* logger_ptr);
+            void start_logging();
+            void stop_logging();
+
+            //Returns the array of tissue compartments
+            std::vector<Cell> get_compartments();
             
-            void set_GF_grad(int first_stop_depth);
-            
-            void reset_GF(int depth);
+            // Gradient factor methods 
+            void set_GF_grad(uint16_t first_stop_depth);
+            void reset_GF(uint16_t depth);
     };
 }
 
