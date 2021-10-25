@@ -13,12 +13,6 @@ namespace DecoModel {
     static const float AValsHe[] = {1.74, 1.38, 1.19, 1.05, 0.92, 0.82, 0.73, 0.65, 0.6, 0.55, 0.53, 0.52, 0.52, 0.52, 0.52, 0.51};
     static const float BValsHe[] = {0.42, 0.57, 0.65, 0.72, 0.76, 0.8, 0.83, 0.86, 0.88, 0.89, 0.9, 0.91, 0.91, 0.92, 0.92, 0.93};
 
-    //******************************************
-    // Default constructor
-    //******************************************
-    Constants::Constants()
-        : halflifeN2(0), AN2(0), BN2(0), halflifeHe(0), AHe(0), BHe(0), cell_index(0) {}
-
 
     //******************************************
     // Choose constants based on compartment

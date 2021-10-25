@@ -22,7 +22,7 @@ namespace DecoModel {
 
         public:
             //Set constants
-            CellVPM(float sample_time, Constants constants);
+            CellVPM(Constants constants, float GFLo);
 
             //Override dive segment function
             void invoke_dive_segment(int time, int start_depth, int rate, float* gas);

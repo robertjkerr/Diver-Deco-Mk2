@@ -8,10 +8,13 @@ namespace DecoModel {
     //******************************************
     // Constructor sets constants
     //******************************************
-    Cell::Cell(Constants constants)
+    Cell::Cell(Constants constants, float GFLo)
             : kN2(HALFLIVE2K(constants.halflifeN2)), kHe(HALFLIVE2K(constants.halflifeHe)),
             AN2(constants.AN2), BN2(constants.BN2), 
-            AHe(constants.AHe), BHe(constants.BHe) {};
+            AHe(constants.AHe), BHe(constants.BHe) {
+
+        GF = GFLo;
+    }
 
 
     //******************************************
@@ -41,7 +44,6 @@ namespace DecoModel {
         pN2 = SCHREINER(pN2, pN2_rate, time, kN2, (pAmb * gas[0]));
         pHe = SCHREINER(pHe, pHe_rate, time, kHe, (pAmb * gas[1]));
 
-        
     }
 
 
@@ -74,9 +76,10 @@ namespace DecoModel {
         B = ((BN2 * pN2) + (BHe * pHe)) / (pN2 + pHe);
         p_ceiling = ((pN2 + pHe) - GF * A) * B / (B + GF * (1 - B));
 
-        ceiling = static_cast<int> (PRES2DEPTH(p_ceiling));
+        ceiling = static_cast<int> PRES2DEPTH(p_ceiling);
         return ceiling;
     }
+
 
 
     //******************************************
@@ -94,5 +97,6 @@ namespace DecoModel {
         std::array<float, 3> out = {pN2, pHe, GF};
         return out;
     }
-    
+
+
 }

@@ -25,6 +25,8 @@ namespace DecoModel{
             //Ascend twice to account for offgassing during first ascent
             current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
             current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
+
+            compartments.set_GF_grad(current_depth);
             in_deco = true;
 
             ceil = ROUNDSTOP(compartments.get_ceiling());

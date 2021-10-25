@@ -25,7 +25,6 @@ namespace DecoModel {
             //Gradient factor params
             float GF;
 
-
             //*****Methods*****
             
             //Dive segment - dissolved gas & otu counting
@@ -35,9 +34,10 @@ namespace DecoModel {
             //Ceiling - gas only
             int get_ceiling_buhl();
 
+
         public:
             //Constructor sets gas mix and constants
-            Cell(Constants constants);
+            Cell(Constants constants, float GFLo);
 
             //Manually set partial pressures
             void set_partial_pressures(float new_pN2, float new_pHe);

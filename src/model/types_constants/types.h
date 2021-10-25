@@ -44,7 +44,6 @@ namespace DecoModel {
         const float rate;
         const int time;
         const int gas[NUM_INERT_GASES];
-        Segment();
         Segment(int seg_start_depth, float seg_rate, int seg_time, const int* gas_mix);
     };
 
@@ -53,7 +52,6 @@ namespace DecoModel {
         const int depth;
         const int time;
         const int gas[NUM_INERT_GASES]; //{%O2, %He}
-        DecoStop();
         DecoStop(int stop_depth, int stop_time, const int* gas_mix);
     };
 
@@ -66,7 +64,6 @@ namespace DecoModel {
         const float AHe;
         const float BHe;
         const unsigned int cell_index;
-        Constants();
         Constants(unsigned int cell_index);
     };
 }
