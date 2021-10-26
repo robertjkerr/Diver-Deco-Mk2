@@ -9,6 +9,8 @@ build
 .ionide
 src/model/test.cpp
 src/model/test.exe
+src/model/test2.exe
+src/model/test2.cpp
 src/model/build.sh
 .vscode
 src/model/compartments/f90/*.o

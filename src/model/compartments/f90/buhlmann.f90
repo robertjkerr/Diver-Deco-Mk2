@@ -1,20 +1,23 @@
 MODULE buhlmann
     USE constants
+    use iso_c_binding
     IMPLICIT NONE
-
     CONTAINS
         !**
         ! Invokes Buhlmann dive segment on tissues
         !**
-        SUBROUTINE BUHL_SEGMENT(k_vals_both, pressures_both, gas, start_depth, depth_rate, time)
+        SUBROUTINE buhl_segment(pressures_both, gas, start_depth, depth_rate, time)
             IMPLICIT NONE
 
-            REAL, DIMENSION(2, num_comps), INTENT(IN) :: k_vals_both
             REAL, DIMENSION(2, num_comps), INTENT(INOUT) :: pressures_both
             REAL, DIMENSION(2), INTENT(IN) :: gas !Should be {fN2, fHe}
             INTEGER, INTENT(IN) :: start_depth, depth_rate, time
 
+            REAL, DIMENSION(2,num_comps) :: k_vals_both
             REAL :: p_amb, p_amb_N2, p_amb_He, p_rate, p_rate_N2, p_rate_He
+
+            k_vals_both(1,:) = LOG(2.0) / (halfLivesN2*60)
+            k_vals_both(2,:) = LOG(2.0) / (halfLivesHe*60)
 
             p_amb = REAL(start_depth)/10 + 1
             p_amb_N2 = p_amb * gas(1)
@@ -29,7 +32,7 @@ MODULE buhlmann
             pressures_both(2,:) = SCHREINER(k_vals_both(2,:), pressures_both(2,:), &
                                     p_rate_He, p_amb_He, time) 
 
-        END SUBROUTINE BUHL_SEGMENT
+        END SUBROUTINE buhl_segment
 
 
         !**
@@ -57,7 +60,7 @@ MODULE buhlmann
         !**
         ! Returns the ceiling of the tissues
         !**
-        INTEGER FUNCTION DEPTH_CEILING(pressures_both, GF)
+        INTEGER FUNCTION depth_ceiling(pressures_both, GF)
             IMPLICIT NONE
 
             REAL, DIMENSION(2, num_comps), INTENT(IN) :: pressures_both
@@ -78,8 +81,8 @@ MODULE buhlmann
                     B_vals / (B_vals + GF*(1 - B_vals)) 
 
             p_ceil = MAXVAL(p_ceil_vals)
-            DEPTH_CEILING = (INT(p_ceil) - 1) * 10
+            depth_ceiling = (INT(p_ceil) - 1) * 10
 
-        END FUNCTION DEPTH_CEILING
+        END FUNCTION depth_ceiling
 
 END MODULE buhlmann
