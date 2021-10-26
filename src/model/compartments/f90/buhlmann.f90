@@ -1,0 +1,85 @@
+MODULE buhlmann
+    USE constants
+    IMPLICIT NONE
+
+    CONTAINS
+        !**
+        ! Invokes Buhlmann dive segment on tissues
+        !**
+        SUBROUTINE BUHL_SEGMENT(k_vals_both, pressures_both, gas, start_depth, depth_rate, time)
+            IMPLICIT NONE
+
+            REAL, DIMENSION(2, num_comps), INTENT(IN) :: k_vals_both
+            REAL, DIMENSION(2, num_comps), INTENT(INOUT) :: pressures_both
+            REAL, DIMENSION(2), INTENT(IN) :: gas !Should be {fN2, fHe}
+            INTEGER, INTENT(IN) :: start_depth, depth_rate, time
+
+            REAL :: p_amb, p_amb_N2, p_amb_He, p_rate, p_rate_N2, p_rate_He
+
+            p_amb = REAL(start_depth)/10 + 1
+            p_amb_N2 = p_amb * gas(1)
+            p_amb_He = p_amb * gas(2)
+
+            p_rate = depth_rate/10
+            p_rate_N2 = p_rate * gas(1)
+            p_rate_He = p_rate * gas(2)
+
+            pressures_both(1,:) = SCHREINER(k_vals_both(1,:), pressures_both(1,:), &
+                                    p_rate_N2, p_amb_N2, time)
+            pressures_both(2,:) = SCHREINER(k_vals_both(2,:), pressures_both(2,:), &
+                                    p_rate_He, p_amb_He, time) 
+
+        END SUBROUTINE BUHL_SEGMENT
+
+
+        !**
+        ! Method behind BUHL_SEGMENT - vectorisation of Schreiner equation
+        !**
+        FUNCTION SCHREINER(k_vals, pressures, p_rate, p_amb_gas, time)
+            IMPLICIT NONE
+
+            REAL, DIMENSION(:), INTENT(IN) :: k_vals, pressures
+            REAL, INTENT(IN) :: p_rate, p_amb_gas
+            INTEGER, INTENT(IN) :: time
+            REAL, DIMENSION(SIZE(pressures)) :: SCHREINER
+
+            REAL, DIMENSION(SIZE(k_vals)) :: expkt
+
+            expkt = EXP(-k_vals * time)
+
+            SCHREINER = p_amb_gas*(1 - expkt) + &
+                        p_rate*(time - 1/k_vals + expkt/k_vals) + &
+                        pressures * expkt
+
+        END FUNCTION SCHREINER
+
+
+        !**
+        ! Returns the ceiling of the tissues
+        !**
+        INTEGER FUNCTION DEPTH_CEILING(pressures_both, GF)
+            IMPLICIT NONE
+
+            REAL, DIMENSION(2, num_comps), INTENT(IN) :: pressures_both
+            REAL, INTENT(IN) :: GF
+
+            REAL, DIMENSION(num_comps) :: A_vals, B_vals, p_ceil_vals, p_sum
+            REAL :: p_ceil       
+
+            p_sum = pressures_both(1,:) + pressures_both(2,:)
+
+            A_vals =  (AValsN2 * pressures_both(1,:) + &
+                    AValsHe * pressures_both(2,:))/ p_sum
+                    
+            B_vals = (BValsN2 * pressures_both(1,:) + &
+                    BValsHe * pressures_both(2,:))/ p_sum
+
+            p_ceil_vals = (p_sum - GF * A_vals) * &
+                    B_vals / (B_vals + GF*(1 - B_vals)) 
+
+            p_ceil = MAXVAL(p_ceil_vals)
+            DEPTH_CEILING = (INT(p_ceil) - 1) * 10
+
+        END FUNCTION DEPTH_CEILING
+
+END MODULE buhlmann

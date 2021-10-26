@@ -11,3 +11,7 @@ src/model/test.cpp
 src/model/test.exe
 src/model/build.sh
 .vscode
+src/model/compartments/f90/*.o
+src/model/compartments/f90/*.mod
+src/model/compartments/f90/*.exe
+src/model/compartments/f90/main.f90
