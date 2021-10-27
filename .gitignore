@@ -17,3 +17,4 @@ src/model/compartments/f90/*.o
 src/model/compartments/f90/*.mod
 src/model/compartments/f90/*.exe
 src/model/compartments/f90/main.f90
+src/model/*.mod

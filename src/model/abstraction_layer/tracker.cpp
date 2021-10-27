@@ -33,12 +33,12 @@ namespace DecoModel {
     // Returns the deco stops needed
     //******************************************
     std::vector<DecoStop> Diver::get_deco_stops() {
-        std::vector<int[NUM_INERT_GASES]> gases;
+        std::vector<int*> gases;
         int* gas;
 
         //Get gases from tanks
         for (Tank tank: tanks) {
-            gas = tank.gas;
+            gas = (int*) tank.gas;
             gases.push_back(tank.gas);
         }
 

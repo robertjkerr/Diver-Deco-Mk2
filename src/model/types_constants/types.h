@@ -26,13 +26,10 @@ The defined types abstraction for deco stops etc
 #define NUM_INERT_GASES 2
 #define MAX_BOTTOM_PO2 1.4f
 #define MAX_DECO_PO2 1.6f
-#define LOG2 0.693147f
 
 //Macros
 #define PRES2DEPTH(pressure) (pressure - 1) * 10
 #define DEPTH2PRES(depth) depth / 10 + 1
-#define HALFLIVE2K(halflife) LOG2/(halflife*60)
-#define SCHREINER(pInit, rate, time, k, pAmbInit) pAmbInit+rate*(time-1/k)-(pAmbInit-pInit-rate/k)*exp(-k*time)
 #define ROUNDSTOP(depth) depth - depth % 3 + 3
 #define MOD(gas, in_deco) static_cast<uint16_t> (DEPTH2PRES(100 * in_deco==true?MAX_DECO_PO2:MAX_BOTTOM_PO2 / gas[0]))
 #define OTU(rate, time, pO2Init) (3*time/11)/(pO2Init+rate*time-pO2Init)*(pow((pO2Init+rate*time-0.5f)/0.5f,11/6)-pow((pO2Init-0.5f)/0.5f,11/6))
@@ -56,17 +53,6 @@ namespace DecoModel {
         DecoStop(uint16_t stop_depth, uint16_t stop_time, const uint8_t* gas_mix);
     };
 
-    //Structure for the halflives, A and B values for nth cell
-    struct Constants {
-        const float halflifeN2;
-        const float AN2;
-        const float BN2;
-        const float halflifeHe;
-        const float AHe;
-        const float BHe;
-        const uint8_t cell_index;
-        Constants(uint8_t cell_index);
-    };
 }
 
 #endif //MODEL_TYPES_H

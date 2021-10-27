@@ -1,5 +1,5 @@
-MODULE constants
-    IMPLICIT NONE
+module constants
+    implicit NONE
 
     INTEGER, PARAMETER :: num_comps = 16
     REAL, DIMENSION(num_comps), PARAMETER :: &
@@ -16,4 +16,4 @@ MODULE constants
     BValsHe = (/0.42, 0.57, 0.65, 0.72, 0.76, 0.8, 0.83, 0.86, &
                 0.88, 0.89, 0.9, 0.91, 0.91, 0.92, 0.92, 0.93/)
 
-END MODULE constants
+end module constants
