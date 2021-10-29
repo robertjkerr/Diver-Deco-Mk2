@@ -1,31 +1,52 @@
 
 CC = g++
+f90 = gfortran
+libs = -lstdc++
 
-MODEL_SRC := src/model
-BIN_DIR := bin
-OBJ_DIR := ${BIN_DIR}/obj
-BUILD_DIR := build
+MODEL_DIR = src/model
+COMPS_DIR = ${MODEL_DIR}/compartments
+TYPES_DIR = ${MODEL_DIR}/types_constants
+F90_DIR = ${COMPS_DIR}/f90
 
-HDRS = ${wildcard ${wildcard ${MODEL_SRC}/*/}*.h}
-SRCS = ${wildcard ${wildcard ${MODEL_SRC}/*/}*.cpp}
+BIN_DIR = bin
+OBJ_DIR = ${BIN_DIR}/obj
+BUILD_DIR = build
+MAIN = main
 
-OBJS := ${SRCS:${MODEL_SRC}/%.cpp=${OBJ_DIR}/%.o}
+COMPS_SRCS = ${wildcard ${COMPS_DIR}/*.cpp} 
+TYPES_SRCS = ${wildcard ${TYPES_DIR}/*.cpp}
+CPP_SRCS = ${COMPS_SRCS} ${TYPES_SRCS}
+F90_SRCS = constants.f90 buhl.f90 module.f90 #Compile in right order
 
-COMPS := ${SRCS:${MODEL_SRC}/compartments/%.cpp=${OBJ_DIR}/%.o}
-ALG := ${SRCS:${MODEL_SRC}/algorithm/%.cpp=${OBJ_DIR}/%.o}
-TRACK := ${SRCS:${MODEL_SRC}/tracking/%.cpp=${OBJ_DIR}/%.o}
-TYPES := ${SRCS:${MODEL_SRC}/types_constants/%.cpp=${OBJ_DIR}/%.o}
+OBJS_FILES = ${COMPS_SRCS:${COMPS_DIR}/%.cpp=%.o} ${TYPES_SRCS:${TYPES_DIR}/%.cpp=%.o} ${F90_SRCS:%.f90=%.o}
+OBJS = ${OBJS_FILES:%=${OBJ_DIR}/%}
 
-all: 
-	${SRCS}
+opt = -Wall -Wextra -pedantic -g
+fopt = -J${MOD_DIR} -I${MOD_DIR}
 
-${OBJ_DIR}: ${OBJ_DIR}
+all: ${OBJ_DIR} ${OBJS}
+
+PHONY: main
+main: ${OBJS}
+	${CC} ${opt} -c ${MAIN}.cpp -o ${OBJ_DIR}/${MAIN}.o
+	${f90} -o ${MAIN} $^ ${OBJ_DIR}/${MAIN}.o ${libs}
+
+${OBJ_DIR}/%.o: ${F90_DIR}/%.f90
+	${f90} ${opt} -c -o $@ $<
+
+${OBJ_DIR}/%.o: ${COMPS_DIR}/%.cpp 
+	${CC} ${opt} -c -o $@ $<
+
+${OBJ_DIR}/%.o: ${TYPES_DIR}/%.cpp
+	${CC} ${opt} -c -o $@ $<
+
+${OBJ_DIR}:
 	mkdir -p $@
 
-link: ${OBJS}
-	${CC} -o ${BIN_DIR}/model_test ${OBJS}
+${MOD_DIR}:
+	mkdir -p $@
 
-objs: ${OBJ_DIR} | ${OBJS}
-
-${OBJS}: ${SRCS} ${HDRS}
-	${CC} -c -o $@ $<
+PHONY: clean
+clean:
+	rm -rf bin build
+	rm *.mod

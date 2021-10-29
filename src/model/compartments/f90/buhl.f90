@@ -1,18 +1,23 @@
 module buhlmann
     use constants
     use iso_c_binding
+
     implicit NONE
+
+    public :: buhl_segment, depth_ceiling
+    private :: SCHREINER
 
     contains
     !**
     ! Invokes Buhlmann dive segment on tissues
     !**
-    subroutine buhl_segment(pressures_both, gas, start_depth, depth_rate, time)
+    function buhl_segment(pressures_both, gas, start_depth, depth_rate, time)
         implicit NONE
 
-        REAL, DIMENSION(2, num_comps), INTENT(INOUT) :: pressures_both
+        REAL, DIMENSION(2,num_comps), INTENT(INOUT) :: pressures_both
         REAL, DIMENSION(2), INTENT(IN) :: gas !Should be {fN2, fHe}
         INTEGER, INTENT(IN) :: start_depth, depth_rate, time
+        REAL, DIMENSION(2,num_comps) :: buhl_segment
 
         REAL, DIMENSION(2,num_comps) :: k_vals_both
         REAL :: p_amb, p_amb_N2, p_amb_He, p_rate, p_rate_N2, p_rate_He
@@ -28,12 +33,12 @@ module buhlmann
         p_rate_N2 = p_rate * gas(1)
         p_rate_He = p_rate * gas(2)
 
-        pressures_both(1,:) = SCHREINER(k_vals_both(1,:), pressures_both(1,:), &
+        buhl_segment(1,:) = SCHREINER(k_vals_both(1,:), pressures_both(1,:), &
                                 p_rate_N2, p_amb_N2, time)
-        pressures_both(2,:) = SCHREINER(k_vals_both(2,:), pressures_both(2,:), &
+        buhl_segment(2,:) = SCHREINER(k_vals_both(2,:), pressures_both(2,:), &
                                 p_rate_He, p_amb_He, time) 
 
-    end subroutine buhl_segment
+    end function buhl_segment
 
 
     !**

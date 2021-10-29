@@ -1,17 +1,16 @@
 /*
-Logic for tissues class
+Logic for Buhlmann class
 */
 
-#include "tissues.h"
+#include "Tissues.h"
 #include "f90/f90_mod.h"
 
 namespace DecoModel {
 
-    Tissues::Tissues(float GFLo_In, float GFHi_In) 
+    Buhlmann::Buhlmann(float GFLo_In, float GFHi_In) 
     : GFHi(GFHi_In), GFLo(GFLo_In) {
 
         int i;
-
         GF = GFLo;
 
         for (i = 0; i < NUM_COMPARTMENTS; i++) {
@@ -20,16 +19,16 @@ namespace DecoModel {
         }
     }
 
-    void Tissues::invoke_dive_segment_buhl(float* gas, int16_t start_depth, 
+    void Buhlmann::invoke_dive_segment_buhl(float gas[NUM_INERT_GASES], int16_t start_depth, 
                     int8_t depth_rate, int16_t time) {
         
-        F90Mod::invoke_buhl_seg((float**) cell_pressures, gas,
+        F90Mod::invoke_dive_segment_buhl(cell_pressures, gas,
             &start_depth, &depth_rate, &time);
     }
 
 
-    void Tissues::invoke_dive_segment(Segment segment) {
-        float gas[NUM_INERT_GASES];
+    void Buhlmann::invoke_dive_segment(Segment segment) {
+        float gas[NUM_INERT_GASES], pO2_rate;
         int16_t start_depth, time;
         int8_t depth_rate;
 
@@ -38,28 +37,26 @@ namespace DecoModel {
 
         start_depth = static_cast<int16_t> (segment.start_depth);
         depth_rate = static_cast<int8_t> (segment.rate);
-        time = static_cast<int16_t> (segment.time);
+        time = static_cast<int16_t> (segment.time) * 60;
 
         invoke_dive_segment_buhl(gas, start_depth, depth_rate, time);
+
+        pO2_rate = static_cast<float> (segment.gas[0]) * depth_rate / 100;
+        otu = otu + OTU(pO2_rate, time, DEPTH2PRES(start_depth));
     }
 
-    uint16_t Tissues::get_ceiling_buhl() {
-        int16_t ceiling = F90Mod::get_ceiling((float**) cell_pressures, &GF);
+    uint16_t Buhlmann::get_ceiling() {
+        int16_t ceiling = F90Mod::get_ceiling(cell_pressures, &GF);
         return static_cast<uint16_t> (ceiling);
     }
 
 
-    uint16_t Tissues::get_ceiling() {return get_ceiling_buhl();}
-
-    float Tissues::get_otu() {return otu;}
-    void Tissues::set_otu(float new_otu) {otu = new_otu;}
-
-    void Tissues::set_GF_grad(uint16_t first_stop_depth) {
+    void Buhlmann::set_GF_grad(uint16_t first_stop_depth) {
         float first_ceiling = DEPTH2PRES(first_stop_depth);
         GF_grad = (GFHi - GFLo) / (1 - first_ceiling);
     }
 
-    void Tissues::reset_GF(uint16_t depth) {
+    void Buhlmann::reset_GF(uint16_t depth) {
         float p_amb = DEPTH2PRES(depth);
         GF = GF_grad * (p_amb - 1.3f) + GFHi;
     }
