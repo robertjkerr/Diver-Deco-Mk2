@@ -5,7 +5,7 @@ Header for Fortran method interface
 #ifndef FORTRAN_INCLUDE_H
 #define FORTRAN_INCLUDE_H
 
-#include <stdint.h>
+#include "../../types_constants/types.h"
 
 #ifdef __cplusplus
 namespace F90Mod {

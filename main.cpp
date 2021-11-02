@@ -13,8 +13,8 @@ int main() {
 
     Segment segment(depth, rate, time, gas);  // Create dive segment
 
-    float GFHi = 0.8f, GFLo = 0.8f;
-    Buhlmann tissues(GFHi, GFLo);             // Constructor tissues
+    float GFHi = 0.8f, GFLo = 0.5f;
+    Buhlmann tissues(GFHi, GFLo);             // Construct tissues
 
     tissues.invoke_dive_segment(segment);     // Invoke time at depth
 

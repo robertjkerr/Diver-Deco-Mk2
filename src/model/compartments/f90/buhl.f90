@@ -14,16 +14,15 @@ module buhlmann
     function buhl_segment(pressures_both, gas, start_depth, depth_rate, time)
         implicit NONE
 
-        REAL, DIMENSION(2,num_comps), INTENT(INOUT) :: pressures_both
-        REAL, DIMENSION(2), INTENT(IN) :: gas !Should be {fN2, fHe}
-        INTEGER, INTENT(IN) :: start_depth, depth_rate, time
-        REAL, DIMENSION(2,num_comps) :: buhl_segment
+        REAL,               DIMENSION(2,num_comps), INTENT(INOUT) :: pressures_both
+        REAL,               DIMENSION(2),           INTENT(IN)    :: gas !Should be {fN2, fHe}
+        INTEGER (kind = 2),                         INTENT(IN)    :: start_depth, depth_rate, time
+        REAL,               DIMENSION(2,num_comps)                :: buhl_segment
+        REAL,               DIMENSION(num_comps)                  :: k_vals_N2, k_vals_He
+        REAL                                                      :: p_amb, p_amb_N2, p_amb_He, p_rate, p_rate_N2, p_rate_He
 
-        REAL, DIMENSION(2,num_comps) :: k_vals_both
-        REAL :: p_amb, p_amb_N2, p_amb_He, p_rate, p_rate_N2, p_rate_He
-
-        k_vals_both(1,:) = LOG(2.0) / (halfLivesN2*60)
-        k_vals_both(2,:) = LOG(2.0) / (halfLivesHe*60)
+        k_vals_N2 = LOG(2.0) / (halfLivesN2*60)
+        k_vals_He = LOG(2.0) / (halfLivesHe*60)
 
         p_amb = REAL(start_depth)/10 + 1
         p_amb_N2 = p_amb * gas(1)
@@ -33,9 +32,9 @@ module buhlmann
         p_rate_N2 = p_rate * gas(1)
         p_rate_He = p_rate * gas(2)
 
-        buhl_segment(1,:) = SCHREINER(k_vals_both(1,:), pressures_both(1,:), &
+        buhl_segment(1,:) = SCHREINER(k_vals_N2, pressures_both(1,:), &
                                 p_rate_N2, p_amb_N2, time)
-        buhl_segment(2,:) = SCHREINER(k_vals_both(2,:), pressures_both(2,:), &
+        buhl_segment(2,:) = SCHREINER(k_vals_He, pressures_both(2,:), &
                                 p_rate_He, p_amb_He, time) 
 
     end function buhl_segment
@@ -47,12 +46,11 @@ module buhlmann
     function SCHREINER(k_vals, pressures, p_rate, p_amb_gas, time)
         implicit NONE
 
-        REAL, DIMENSION(:), INTENT(IN) :: k_vals, pressures
-        REAL, INTENT(IN) :: p_rate, p_amb_gas
-        INTEGER, INTENT(IN) :: time
-        REAL, DIMENSION(SIZE(pressures)) :: SCHREINER
-
-        REAL, DIMENSION(SIZE(k_vals)) :: expkt
+        REAL,               DIMENSION(:),              INTENT(IN) :: k_vals, pressures
+        REAL,                                          INTENT(IN) :: p_rate, p_amb_gas
+        INTEGER (kind = 2),                            INTENT(IN) :: time
+        REAL,               DIMENSION(SIZE(pressures))            :: SCHREINER
+        REAL,               DIMENSION(SIZE(k_vals))               :: expkt
 
         expkt = EXP(-k_vals * time)
 
@@ -66,14 +64,13 @@ module buhlmann
     !**
     ! Returns the ceiling of the tissues
     !**
-    INTEGER function depth_ceiling(pressures_both, GF)
+    INTEGER (kind = 2) function depth_ceiling(pressures_both, GF)
         implicit NONE
 
         REAL, DIMENSION(2, num_comps), INTENT(IN) :: pressures_both
-        REAL, INTENT(IN) :: GF
-
-        REAL, DIMENSION(num_comps) :: A_vals, B_vals, p_ceil_vals, p_sum
-        REAL :: p_ceil       
+        REAL,                          INTENT(IN) :: GF
+        REAL, DIMENSION(num_comps)                :: A_vals, B_vals, p_ceil_vals, p_sum
+        REAL                                      :: p_ceil       
 
         p_sum = pressures_both(1,:) + pressures_both(2,:)
 
@@ -87,7 +84,7 @@ module buhlmann
                 B_vals / (B_vals + GF*(1 - B_vals)) 
 
         p_ceil = MAXVAL(p_ceil_vals)
-        depth_ceiling = (INT(p_ceil) - 1) * 10
+        depth_ceiling = INT((p_ceil - 1) * 10, kind = 2)
 
     end function depth_ceiling
 
