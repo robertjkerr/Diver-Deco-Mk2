@@ -9,15 +9,11 @@ namespace DecoModel {
     // Interface for tissues classes
     //******************************************
     class Tissues {
-        protected:
-            float otu = 0;
 
         public:
             virtual void invoke_dive_segment(Segment) {};
             virtual uint16_t get_ceiling() = 0;
 
-            float get_otu() {return otu;}
-            void set_otu(float new_otu) {otu = new_otu;}
 
     };
 
@@ -27,8 +23,11 @@ namespace DecoModel {
     //******************************************
     class Buhlmann : public Tissues{
         private:
+            // Partial pressures of dissolved gases. Each row is an inert gas
+            //  and each column is the partial pressure for the columnth tissue
             float cell_pressures[NUM_INERT_GASES][NUM_COMPARTMENTS];
 
+            // Gradient factor and its gradient from high to low
             float GF;
             float GF_grad;
             const float GFHi;

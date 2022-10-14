@@ -32,7 +32,6 @@ The defined types abstraction for deco stops etc
 #define DEPTH2PRES(depth) static_cast<float> (depth) / 10 + 1
 #define ROUNDSTOP(depth) depth - depth % 3 + 3
 #define MOD(gas, in_deco) static_cast<uint16_t> (DEPTH2PRES(100 * in_deco==true?MAX_DECO_PO2:MAX_BOTTOM_PO2 / gas[0]))
-#define OTU(rate, time, pO2Init) (3*time/11)/(pO2Init+rate*time-pO2Init)*(pow((pO2Init+rate*time-0.5f)/0.5f,11/6)-pow((pO2Init-0.5f)/0.5f,11/6))
 
 namespace DecoModel {
     //Type for an arbitrary linear dive segment
@@ -42,6 +41,7 @@ namespace DecoModel {
         const int8_t rate;
         const uint16_t time;
         const uint8_t gas[NUM_INERT_GASES];
+        // Input gas mix is {%O2, %He}
         Segment(uint16_t seg_start_depth, int8_t seg_rate, uint16_t seg_time, const uint8_t* gas_mix);
     };
 
