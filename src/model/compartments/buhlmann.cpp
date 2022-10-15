@@ -10,9 +10,10 @@ namespace DecoModel {
     Buhlmann::Buhlmann(float GFLo_In, float GFHi_In) 
     : GFHi(GFHi_In), GFLo(GFLo_In) {
 
-        int i;
+        uint8_t i;
         GF = GFLo;
 
+        // Initialise all tissue compartments to surface pressures
         for (i = 0; i < NUM_COMPARTMENTS; i++) {
             cell_pressures[0][i] = RESET_N2;
             cell_pressures[1][i] = RESET_HE;

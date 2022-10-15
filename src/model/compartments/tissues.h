@@ -4,6 +4,9 @@ Tissues class using Fortran Buhlmann backend
 
 #include "../types_constants/types.h"
 
+#ifndef MODEL_TISSUES
+#define MODEL_TISSUES
+
 namespace DecoModel {
     //******************************************
     // Interface for tissues classes
@@ -21,7 +24,7 @@ namespace DecoModel {
     //******************************************
     // Class for set of Buhlmann tissues
     //******************************************
-    class Buhlmann : public Tissues{
+    class Buhlmann : private Tissues {
         private:
             // Partial pressures of dissolved gases. Each row is an inert gas
             //  and each column is the partial pressure for the columnth tissue
@@ -48,3 +51,5 @@ namespace DecoModel {
     };
 
 }
+
+#endif // MODEL_TISSUES

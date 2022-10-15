@@ -9,42 +9,57 @@ namespace DecoModel{
     //******************************************
     // Deco stops algorithm
     //******************************************
-    std::vector<DecoStop> get_deco_stops(Tissues compartments, uint16_t current_depth,
+    std::vector<DecoStop> get_deco_stops(Buhlmann compartments, uint16_t current_depth,
                             std::vector<uint8_t*> gases, uint8_t dt) {
         //Note that compartments is passed by value so the obj is copied
 
-        std::vector<DecoStop> stops;
-        uint16_t ceiling, time;
-        uint8_t* gas;
         bool in_deco = false;
+        std::vector<DecoStop> stops;
+        uint16_t ceiling, time, num_stops;
+        uint8_t i;
+        uint8_t* gas = select_rich_gas(gases, current_depth, in_deco);
+        DecoStop stop(0, 0, gas);
 
+        
+        // Ascend to ceiling 
         do {
-            if (in_deco == false) {
-                //Ascend to first stop, set GF
-                gas = gases[0];
-                current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
-                compartments.set_GF_grad(current_depth);
-                in_deco = true;
-            }
-            else {
-                //Ordinary deco stop - select gas, set GF and wait till ceiling ascends
-                gas = select_rich_gas(gases, current_depth, in_deco);
-                compartments.reset_GF(current_depth);
+            // Check ceiling
+            ceiling = compartments.get_ceiling();
 
-                ceiling = ROUNDSTOP(compartments.get_ceiling());
-                time = 0;
-                while (current_depth == ceiling) {
-                    wait(&compartments, current_depth, gas, dt);
-                    time = time + dt;
-                }
+            // Choose richest gas and ascend to the ceiling
+            gas = select_rich_gas(gases, current_depth, in_deco);
+            current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
 
-                stops.push_back(DecoStop(current_depth, time, gas));
+        // Is ceiling continue to reduce while the compartments ascend and offgas? Ascend until ceiling is hit
+        } while (current_depth > ceiling);
 
-                //Ascend to next stop, or the surface
-                current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
-            }
+        // Check if we ascended all the way to the surface - no deco needed
+        if (current_depth <= 0) {
+            stops.push_back(stop);
+            return stops;
         }
-        while (current_depth > 0);
+
+        // First deco stop reached - find number of stops required
+        in_deco = true;
+        num_stops = current_depth / 3;
+
+        for (i=0; i<num_stops; i++) {
+            // Switch to rich gas and get ceiling
+            gas = select_rich_gas(gases, current_depth, in_deco);
+            ceiling = compartments.get_ceiling();
+
+            // Wait at depth until ceiling increases - time elasped is the stop time
+            time = 0;
+            while (current_depth == ceiling) {
+                wait(&compartments, current_depth, gas, dt);
+                ceiling = compartments.get_ceiling();
+                time = time + dt;
+            }
+
+            // Add deco stop to stop list and ascend to next stop 
+            stops.push_back(DecoStop(current_depth, time, gas));
+            current_depth = asc2ceil(&compartments, current_depth, gas, in_deco);
+        }
         
         return stops;
     }

@@ -47,6 +47,7 @@ namespace DecoModel {
 
     //Type for a deco stop
     struct DecoStop {
+        // Time is in minutes
         const uint16_t depth;
         const uint16_t time;
         const uint8_t gas[NUM_INERT_GASES]; //{%O2, %He}

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "src/model/compartments/tissues.h"
+#include "src/model/algorithm/deco_algorithm.h"
 
 using namespace DecoModel;
 
@@ -10,6 +11,9 @@ int main() {
     uint8_t gas[] = {20, 20};                 // {%O2, %He}
     uint16_t depth = 60, time = 45;           // 45 mins @ 60 metres
     int8_t rate = 0;                          // No depth change
+
+    std::vector<uint8_t*> gases;
+    gases.push_back(gas);
 
     Segment segment(depth, rate, time, gas);  // Create dive segment
 
@@ -21,7 +25,12 @@ int main() {
     uint16_t ceiling;
     ceiling = tissues.get_ceiling();          // Calculate ascent ceiling
 
+    std::cout << "Ceiling is:" << std::endl;
     std::cout << ceiling << std::endl;
+    
+    std::cout << "Stops are" << std::endl;
+
+    std::vector<DecoStop> stops = get_deco_stops(tissues, depth, gases, 1);
 
     return 0;
 }

@@ -39,7 +39,7 @@ namespace DecoModel {
     //******************************************
     // Ascend to ceiling routine
     //******************************************
-    static uint16_t asc2ceil(Tissues* compartments, uint16_t current_depth,
+    static uint16_t asc2ceil(Buhlmann* compartments, uint16_t current_depth,
                             uint8_t* gas, bool in_deco) {
 
         uint16_t ceiling;
@@ -57,7 +57,7 @@ namespace DecoModel {
     //******************************************
     // Waits at depth until ceiling changes
     //******************************************
-    static void wait(Tissues* compartments, uint16_t current_depth, uint8_t* gas, float time) {
+    static void wait(Buhlmann* compartments, uint16_t current_depth, uint8_t* gas, float time) {
         Segment segment = stop2seg(DecoStop(current_depth, time, gas)) ;
         compartments->invoke_dive_segment(segment);
     }
